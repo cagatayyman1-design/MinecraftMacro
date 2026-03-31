@@ -14,10 +14,24 @@ print("Bot başlatılıyor, lütfen bekleyin...")
 
 
 # Firebase Kurulumu
-cred = credentials.Certificate(os.getenv("FIREBASE_KEY_PATH", "../firebase-key.json"))
+firebase_key_path = os.getenv("FIREBASE_KEY_PATH")
+firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
+
+if firebase_credentials_json:
+    # Railway'de JSON string olarak env'den yükle
+    import json
+    cred_dict = json.loads(firebase_credentials_json)
+    cred = credentials.Certificate(cred_dict)
+elif firebase_key_path and os.path.exists(firebase_key_path):
+    # Lokal'de dosyadan yükle
+    cred = credentials.Certificate(firebase_key_path)
+else:
+    cred = credentials.Certificate("../firebase-key.json")
+
 firebase_admin.initialize_app(cred, {
-    'databaseURL': os.getenv("DATABASE_URL")
+    'databaseURL': os.getenv("DATABASE_URL", "https://skyproject-db-default-rtdb.europe-west1.firebasedatabase.app/")
 })
+
 
 
 intents = discord.Intents.default()
