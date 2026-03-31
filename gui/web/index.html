@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SKY PROJECT</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="login-modal" class="modal">
+        <video id="login-video" autoplay muted loop playsinline src="login_bg.mp4"></video>
+        <audio id="login-audio" loop src="login_bg.mp3"></audio>
+        <div class="modal-content glass login-box">
+            <div class="login-logo-anim">
+                <i class="fa-solid fa-cloud"></i>
+            </div>
+            <h2><i class="fa-solid fa-microchip" style="font-size: 14px; opacity: 0.6;"></i> Cihaz Onayı (HWID)</h2>
+            <p style="font-size: 11px; margin-bottom: 8px; color: var(--text-muted);">Giriş yapmak için HWID'nizi Discord botuna göndererek onaylatın.</p>
+            <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                <input type="text" id="license-key" placeholder="HWID Yükleniyor..." readonly style="text-align: center; font-size: 12px; flex: 1; padding: 10px;">
+                <button class="btn-secondary" style="width: 44px; padding: 0; display:flex; justify-content:center; align-items:center; border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.05);" onclick="copyHwid()" title="Kopyala"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            <p id="login-error" class="error-text"></p>
+            <button class="btn-primary login-btn" onclick="verifyLogin()"><i class="fa-solid fa-shield-halved"></i> GİRİŞ YAP</button>
+        </div>
+        <div class="vertical-volume-wrapper">
+            <input type="range" id="login-vol" min="0" max="1" step="0.05" value="0.1" oninput="setLoginVolume(this.value)">
+            <i id="vol-icon" class="fa-solid fa-volume-low" onclick="toggleMute()" style="cursor:pointer;"></i>
+        </div>
+        <a href="https://discord.gg/savana" target="_blank" class="discord-badge">
+            <i class="fa-brands fa-discord"></i>
+            <span>discord.gg/savana</span>
+        </a>
+        <div class="login-branding">by CagatayYaman</div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-cloud"></i></div>
+                <div class="logo-details">
+                    <span>SKY PROJECT</span>
+                    <small id="lbl-expiry">Lisans Kontrol Ediliyor...</small>
+                </div>
+            </div>
+            <div class="user-card glass-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div><i class="fa-solid fa-user-shield"></i> <span id="lbl-user">Misafir</span></div>
+                <button class="btn-icon danger" style="width:26px; height:26px; font-size:11px;" onclick="doLogout()" title="Çıkış / Key Değiştir"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+            <nav>
+                <button id="nav-macro" class="nav-btn active" onclick="switchPage('macro')">
+                    <i class="fa-solid fa-keyboard"></i> Makrolar
+                </button>
+                <button id="nav-bats" class="nav-btn" onclick="switchPage('bats')">
+                    <i class="fa-solid fa-bolt"></i> Scriptler
+                </button>
+                <button id="nav-themes" class="nav-btn" onclick="switchPage('themes')">
+                    <i class="fa-solid fa-palette"></i> Temalar
+                </button>
+                <button id="nav-music" class="nav-btn" onclick="switchPage('music')">
+                    <i class="fa-solid fa-music"></i> Müzik
+                </button>
+            </nav>
+            <div class="profiles-section">
+                <span class="section-title-sm">PROFİLLER</span>
+                <div id="profile-list" class="scroll-area"></div>
+                <button class="btn-new-profile" onclick="newProfile()"><i class="fa-solid fa-plus"></i> Yeni Profil</button>
+            </div>
+            <div class="sidebar-footer">by CagatayYaman</div>
+        </aside>
+
+        <main class="content">
+            <!-- MACRO PAGE -->
+            <div id="page-macro" class="page">
+                <header class="topbar">
+                    <div class="profile-header">
+                        <input type="text" id="active-profile-name" onblur="renameProfile()">
+                        <button class="btn-icon danger" onclick="deleteProfile()"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <div id="status-pill" class="status-pill offline">
+                        <i class="fa-solid fa-circle"></i> <span id="lbl-status">UYKUDA</span>
+                    </div>
+                    <button class="btn-icon" style="margin-left:10px; background:transparent; color:var(--text-main);" onclick="toggleMiniMode()" title="Mini / Normal Mod"><i class="fa-solid fa-compress"></i></button>
+                </header>
+
+                <div class="slot-tabs">
+                    <div class="slot-pill-bg">
+                        <button id="tab-left" class="slot-btn active" onclick="setSlot('left')"><i class="fa-solid fa-mouse"></i> Makro Slotu 1</button>
+                        <button id="tab-right" class="slot-btn" onclick="setSlot('right')"><i class="fa-solid fa-mouse"></i> Makro Slotu 2</button>
+                    </div>
+                </div>
+
+                <div class="macro-body">
+                    <!-- Sequence Panel -->
+                    <div class="sequence-panel">
+                        <span class="section-title">EYLEM DİZİSİ</span>
+                        <div id="sequence-list" class="scroll-area sequence-area"></div>
+                    </div>
+
+                    <!-- Config Panel -->
+                    <div class="config-panel">
+                        <span class="section-title"><i class="fa-solid fa-bolt"></i> SLOT AYARLARI</span>
+                        <div class="glass-card config-card">
+                            <div class="setting-row">
+                                <label>Tetik Tuşu<br><small>Basılı tutulacak yön</small></label>
+                                <select id="sel-trigger" onchange="markUnsaved()">
+                                    <option value="left">Sol Tık</option>
+                                    <option value="right">Sağ Tık</option>
+                                    <option value="mid">Orta Tık</option>
+                                    <option value="x1">Mouse 4</option>
+                                    <option value="x2">Mouse 5</option>
+                                </select>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="setting-row">
+                                <label>Aç / Kapa Tuşu</label>
+                                <div class="hotkey-box">
+                                    <button id="btn-hotkey" onclick="listenHotkey()">F8</button>
+                                    <button class="btn-icon danger" style="padding: 6px 10px;" onclick="clearHotkey()"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="divider"></div>
+                            <div class="setting-row">
+                                <label>Bypass Tuşu</label>
+                                <select id="sel-helper" onchange="markUnsaved()">
+                                    <option value="None">Yok</option>
+                                    <option value="Shift">Shift</option>
+                                    <option value="Ctrl">Ctrl</option>
+                                    <option value="Alt">Alt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <span class="section-title" style="margin-top: 20px;"><i class="fa-solid fa-redo"></i> TEKRARLAMA AYARLARI</span>
+                        <div class="glass-card config-card">
+                            <div class="setting-row">
+                                <label>Tekrarlama Türü<br><small>Makronun çalışma şekli</small></label>
+                                <select id="sel-repeat-mode" onchange="markUnsaved()">
+                                    <option value="while_pressed">Basılı İken</option>
+                                    <option value="toggle">Geçişli (Toggle)</option>
+                                    <option value="once">Bir Kez</option>
+                                </select>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="setting-row">
+                                <label>Gecikme (ms)<br><small>Döngüler arası bekleme</small></label>
+                                <input type="number" id="inp-repeat-ms" value="13" min="0" style="width:70px; background:var(--bg-input); border:1px solid var(--border-lite); border-radius:8px; padding:6px; font-size:12px; text-align:center;" onchange="markUnsaved()">
+                            </div>
+                        </div>
+
+                        <span class="section-title" style="margin-top: 20px;"><i class="fa-solid fa-plus"></i> YENİ EYLEM</span>
+                        <div class="glass-card config-card">
+                            <div class="action-tabs">
+                                <button id="act-btn-delay" class="act-tab active" onclick="setActTab('delay')">Bekleme</button>
+                                <button id="act-btn-mouse" class="act-tab" onclick="setActTab('mouse')">Fare</button>
+                                <button id="act-btn-keyboard" class="act-tab" onclick="setActTab('keyboard')">Klavye</button>
+                            </div>
+                            <div id="act-delay" class="act-content">
+                                <label>Gecikme (ms)</label>
+                                <input type="number" id="inp-delay" value="50">
+                            </div>
+                            <div id="act-mouse" class="act-content hidden">
+                                <label>Fare Tuşu</label>
+                                <select id="inp-mouse-btn">
+                                    <option value="left">Sol Tık</option>
+                                    <option value="right">Sağ Tık</option>
+                                    <option value="middle">Orta Tık</option>
+                                </select>
+                                <label style="margin-top:10px;">Eylem</label>
+                                <select id="inp-mouse-act">
+                                    <option value="down">Aşağı Bas (Down)</option>
+                                    <option value="up">Yukarı Bırak (Up)</option>
+                                    <option value="click">Normal Tıkla</option>
+                                </select>
+                            </div>
+                            <div id="act-keyboard" class="act-content hidden">
+                                <label>Tuş (örn: w, f5)</label>
+                                <input type="text" id="inp-key" value="w">
+                                <label style="margin-top:10px;">Eylem</label>
+                                <select id="inp-key-act">
+                                    <option value="down">Aşağı Bas (Down)</option>
+                                    <option value="up">Yukarı Bırak (Up)</option>
+                                    <option value="press">Tuşa Bas</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" style="margin-top: 15px; width: 100%;" onclick="addAction()">＋ DİZİYE EKLE</button>
+                        </div>
+                        
+                        <button id="btn-save" class="btn-success" style="margin-top:20px; width: 100%; height:44px;" onclick="saveSettings()">✓ KAYDET VE UYGULA</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BATS PAGE -->
+            <div id="page-bats" class="page hidden">
+                <header class="topbar bat-topbar">
+                    <div class="bat-header">
+                        <h2><i class="fa-solid fa-bolt" style="color:var(--orange);"></i> .BAT SCRIPT YÖNETİMİ</h2>
+                        <span class="text-muted">Performans ve hit fiks dosyalarını yönetin</span>
+                    </div>
+                </header>
+                <div class="bat-body">
+                    <div class="bat-list-panel glass-card">
+                        <span class="section-title" style="padding-left:14px; padding-top:14px;">BAT DOSYALARI</span>
+                        <div id="bat-list" class="scroll-area" style="padding: 10px;"></div>
+                        <div style="padding: 10px;">
+                            <button class="btn-secondary" style="width: 100%; justify-content:center;" onclick="addBat()"><i class="fa-solid fa-plus"></i> Bat Ekle</button>
+                        </div>
+                    </div>
+                    <div class="bat-detail-panel glass-card">
+                        <div class="bat-info-bar">
+                            <div style="flex:1;">
+                                <h3 id="lbl-bat-name" style="margin:0; font-size:16px;">Bat dosyası seçin…</h3>
+                                <p id="lbl-bat-path" class="text-muted" style="margin:4px 0 0 0; font-size:11px;"></p>
+                            </div>
+                            <div class="bat-controls">
+                                <button id="btn-bat-run" class="btn-success" onclick="runBat()" disabled><i class="fa-solid fa-play"></i> Çalıştır</button>
+                                <button id="btn-bat-delete" class="btn-icon danger" onclick="deleteBat()" disabled><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="terminal-container">
+                            <span class="section-title">KOMUT ÇIKTISI</span>
+                            <pre id="bat-terminal"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THEMES PAGE -->
+            <div id="page-themes" class="page hidden">
+                <header class="topbar bat-topbar">
+                    <div class="bat-header">
+                        <h2><i class="fa-solid fa-palette" style="color:var(--blue);"></i> UYGULAMA TEMALARI</h2>
+                        <span class="text-muted">Arayüz renklerini ve hissiyatını kişiselleştirin</span>
+                    </div>
+                </header>
+                <div class="bat-body" style="flex-direction:row; flex-wrap:wrap; overflow-y:auto; padding:20px; align-content: flex-start;">
+                    
+                    <div class="glass-card theme-card" onclick="switchThemeOption('light')">
+                        <div class="theme-preview" style="background:#fbfbfd; border:1px solid #d1d1d6;">
+                            <div style="background:#007aff; width:30px; height:10px; border-radius:5px; margin:10px;"></div>
+                        </div>
+                        <h3>Aydınlık Mod</h3>
+                        <p>Orijinal ve berrak tasarım</p>
+                    </div>
+
+                    <div class="glass-card theme-card" onclick="switchThemeOption('dark')">
+                        <div class="theme-preview" style="background:#1c1c1e; border:1px solid #38383a;">
+                            <div style="background:#0a84ff; width:30px; height:10px; border-radius:5px; margin:10px;"></div>
+                        </div>
+                        <h3>Karanlık Mod</h3>
+                        <p>Gerçekçi ve göz yormayan</p>
+                    </div>
+
+                    <div class="glass-card theme-card" onclick="switchThemeOption('midnight-purple')">
+                        <div class="theme-preview" style="background:#0B0D17; border:1px solid #2C2F48;">
+                            <div style="background:#8C52FF; width:30px; height:10px; border-radius:5px; margin:10px;"></div>
+                        </div>
+                        <h3>Midnight Purple</h3>
+                        <p>Gece yarısı ve neon mor</p>
+                    </div>
+
+                    <div class="glass-card theme-card" onclick="switchThemeOption('cherry')">
+                        <div class="theme-preview" style="background:#1f1418; border:1px solid #423438;">
+                            <div style="background:#ff6b8b; width:30px; height:10px; border-radius:5px; margin:10px;"></div>
+                        </div>
+                        <h3>Cherry Blossom</h3>
+                        <p>Loş pembe aydınlatmalı estetik</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MUSIC PAGE -->
+            <div id="page-music" class="page hidden">
+                <header class="topbar">
+                    <div class="profile-header" style="gap:15px; font-size:18px;">
+                        <i class="fa-solid fa-headphones" style="color:var(--blue); font-size:24px;"></i> <span>SOUND STUDIO</span>
+                    </div>
+                </header>
+                <!-- TRACER: PAGE_IS_VISIBLE -->
+                
+                <div class="music-container">
+                    <div class="music-player glass-card">
+                        <div class="player-art">
+                            <div class="art-ring"></div>
+                            <i class="fa-solid fa-compact-disc disc-anim"></i>
+                        </div>
+                        <div class="player-info">
+                            <h3 id="music-title">Seçili Şarkı Yok</h3>
+                            <p id="music-artist">Oynatmak için listeden seçin</p>
+                        </div>
+                        <div class="music-timeline">
+                            <span id="music-current">0:00</span>
+                            <div class="seek-wrapper">
+                                <input type="range" id="music-seek" min="0" max="100" value="0" oninput="seekMusic(this.value)">
+                            </div>
+                            <span id="music-total">0:00</span>
+                        </div>
+                        <div class="player-controls">
+                            <button class="btn-icon" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+                            <button id="btn-play-pause" class="btn-icon large" onclick="toggleMusic()"><i class="fa-solid fa-play"></i></button>
+                            <button class="btn-icon" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+                        </div>
+                        <div class="music-volume-row">
+                            <i class="fa-solid fa-volume-low"></i>
+                            <input type="range" id="music-vol" min="0" max="1" step="0.05" value="0.5" oninput="setMusicVolume(this.value)">
+                        </div>
+                    </div>
+                    
+                    <div class="music-list-card glass-card">
+                        <span class="section-title">GAMING PLAYLIST</span>
+                        <div id="playlist" class="scroll-area playlist-area">
+                            <!-- Tracks will be loaded via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- UPDATE MODAL -->
+    <div id="update-modal" class="modal hidden">
+        <div class="modal-content glass update-box">
+            <div class="update-icon">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h2>Yeni Güncelleme Mevcut!</h2>
+            <div class="version-badge">v<span id="update-version">1.1.0</span></div>
+            <div class="changelog-container">
+                <span class="section-title-sm">YENİLİKLER</span>
+                <p id="update-changelog">Hata düzeltmeleri ve performans iyileştirmeleri yapıldı.</p>
+            </div>
+            <div class="update-actions" id="update-initial-actions">
+                <button class="btn-primary" id="btn-update-now">ŞİMDİ İNDİR</button>
+                <button class="btn-secondary" onclick="closeUpdateModal()">SONRA</button>
+            </div>
+
+            <div id="dl-progress-container" class="hidden">
+                <div class="progress-wrapper">
+                    <div id="dl-progress-bar" class="progress-fill"></div>
+                </div>
+                <div class="dl-status">
+                    <span id="dl-status-text">İndiriliyor...</span>
+                    <span id="dl-percent">0%</span>
+                </div>
+            </div>
+
+            <div id="dl-complete-actions" class="hidden">
+                <p style="font-size: 13px; color: var(--green); margin-bottom: 15px;"><i class="fa-solid fa-check-circle"></i> İndirme tamamlandı! Dosya masaüstüne kaydedildi.</p>
+                <button class="btn-primary" onclick="closeUpdateModal()">KAPAT</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="script.js"></script>
+    <div id="toast-container"></div>
+</body>
+</html>

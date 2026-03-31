@@ -1,0 +1,10 @@
+eel
+keyboard
+mouse
+mss
+numpy
+Pillow
+pypresence
+firebase-admin
+discord.py
+python-dotenv
