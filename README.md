@@ -4,7 +4,7 @@ SKY PROJECT, Minecraft oyuncuları için geliştirilmiş, yüksek performanslı 
 
 ## Ozellikler
 
-- Özgün Stili Arayüz: Modern, sik ve kullanici dostu tasarim.
+- Özgün Stili Arayüz: Modern, şık ve kullanıcı dostu tasarım.
 - Yüksek Performans: Minimum gecikme ile maksimum CPS.
 - HWID Lisans Sistemi: Discord botu ve Firebase entegreli güvenli cihaz dogrulama.
 - Süreli Lisans Destegi: Gün bazli veya sinirsiz abonelik yönetimi.
@@ -24,3 +24,5 @@ SKY PROJECT, Minecraft oyuncuları için geliştirilmiş, yüksek performanslı 
 Bu proje g300s alternatifi olarak geliştirilmiştir
 ---
 Gelistiren: cagatayyman1-design (https://github.com/cagatayyman1-design)
+
+discord.gg/savanagang
