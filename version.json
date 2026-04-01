@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
-    "url": "https://github.com/CagatayYaman/MinecraftMacro/releases/download/v1.0.0/SKY_PROJECT.exe",
-    "changelog": "SKY PROJECT v1.0.0 Yayınlandı!\n- Tamamen yeni glassmorphism arayüz.\n- Direkt uygulama içi indirme sistemi.\n- Makro slotları ve profil yönetimi.\n- Müzik çalar entegrasyonu."
+    "version": "1.1.0",
+    "url": "https://github.com/cagatayyman1-design/MinecraftMacro/releases/download/v1.1.0/SKY_PROJECT.exe",
+    "changelog": "SKY PROJECT v1.1.0 Güncellemesi!\n- Geliştirici imzası güncellendi.\n- Discord RPC kapanmama hatası giderildi.\n- Otomatik giriş (auto-login) kullanıcı isteğiyle kaldırıldı.\n- Derleme (build) sistemi otomatize edildi."
 }
