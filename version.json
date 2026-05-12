@@ -1,5 +1,5 @@
 {
-    "version": "1.3.0",
-    "url": "https://github.com/cagatayyman1-design/MinecraftMacro/releases/download/v1.3.0/SKY_PROJECT.exe",
-    "changelog": "SKY PROJECT v1.3.0 Büyük Performans ve UX Güncellemesi!\n- Profil Sıralama: Sürükle-bırak özelliği ile profillerinizi dilediğiniz gibi sıralayın.\n- Yeni Boş Durum Ekranı: Profiliz olmadığında sizi yönlendiren yeni profesyonel arayüz.\n- CPU Devrimi: Artık makro sistemi boştayken %1'den az CPU kullanır.\n- Gelişmiş Stabilite: Makro durdurulduğunda takılı kalan tuş sorunu tamamen çözüldü.\n- Kayıt Göstergesi: Ayarların kaydedildiğini bildiren yeni görsel feedback sistemi."
+    "version": "1.4.0",
+    "url": "https://github.com/cagatayyman1-design/MinecraftMacro/releases/download/v1.4.0/SKY_PROJECT.exe",
+    "changelog": "SKY PROJECT v1.4.0 - Makro Marketi Geldi!\n- Makro Marketi: Artık profillerini buluta yükleyebilir ve diğer kullanıcıların paylaşımlarını keşfedebilirsin.\n- Profil Paylaşımı: Hazırladığın makroları toplulukla paylaşmak için yeni arayüz.\n- Kilit Sistemi: Paylaşılan profiller için kilitli/açık kontrolü eklendi.\n- Hata Düzeltmeleri: Performans ve stabilite iyileştirmeleri yapıldı. \n-SonOyuncu ve CraftRise sunucularında yasaklanma yaratan sorunlar Kernel seviyesinde Bypass edildi."
 }
