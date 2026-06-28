@@ -1,5 +1,5 @@
 {
-    "version": "1.4.0",
-    "url": "https://github.com/cagatayyman1-design/MinecraftMacro/releases/download/v1.4.0/SKY_PROJECT.exe",
-    "changelog": "SKY PROJECT v1.4.0 - Makro Marketi Geldi!\n- Makro Marketi: Artık profillerini buluta yükleyebilir ve diğer kullanıcıların paylaşımlarını keşfedebilirsin.\n- Profil Paylaşımı: Hazırladığın makroları toplulukla paylaşmak için yeni arayüz.\n- Kilit Sistemi: Paylaşılan profiller için kilitli/açık kontrolü eklendi.\n- Hata Düzeltmeleri: Performans ve stabilite iyileştirmeleri yapıldı. \n-SonOyuncu ve CraftRise sunucularında yasaklanma yaratan sorunlar Kernel seviyesinde Bypass edildi."
+    "version": "1.5.0",
+    "url": "https://github.com/cagatayyman1-design/MinecraftMacro/releases/download/v1.5.0/SKY_PROJECT.exe",
+    "changelog": "SKY PROJECT v1.5.0 - Büyük Güncelleme!\n\n🔧 HATA DÜZELTMELERİ\n- Makro tetikleyici hatası giderildi: Sanal tıklamalar artık fiziksel tuş durumunu etkilemiyor.\n- Giriş sırasında oluşan veritabanı bağlantı hataları düzeltildi.\n- Güncelleme indirme işlemindeki çökme sorunu çözüldü.\n\n⚡ YENİ ÖZELLİKLER\n- CPS Tıklama Hız Testi: Sol tık ve sağ tık için ayrı ayrı hız testi paneli eklendi.\n- Market Sistemi (Pek Yakında): Makro profillerini paylaşabileceğiniz market altyapısı hazırlandı.\n- Profil Beğeni Sistemi: Market profillerini beğenip favorilere ekleyebilme desteği.\n\n🎨 ARAYÜZ İYİLEŞTİRMELERİ\n- Sağ tık context menüsü yeniden tasarlandı, ikonlar ve kategoriler eklendi.\n- Makro sekans editörü sürükle-bırak desteği ile yenilendi.\n- Script bölümüne güvenlik uyarı ekranı eklendi.\n- Tüm 'Pek Yakında' ekranları tam ortalı ve görsel olarak iyileştirildi."
 }
